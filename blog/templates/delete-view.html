@@ -1,0 +1,10 @@
+<h1>{{ title }}</h1>
+
+
+
+<form method="post" action=""> {% csrf_token %}
+    Are you sure to delete this post ?
+
+    <input type="submit" value="yes">
+    <a href="{% url 'blog:home' %}">Cancel</a>
+</form>
