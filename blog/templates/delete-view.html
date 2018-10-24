@@ -5,6 +5,6 @@
 <form method="post" action=""> {% csrf_token %}
     Are you sure to delete this post ?
 
-    <input type="submit" value="yes">
+    <input type="submit" value="{% if buttontitle %}{{ buttontitle }}{% endif %}">
     <a href="{% url 'blog:home' %}">Cancel</a>
 </form>

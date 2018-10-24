@@ -4,5 +4,5 @@
 
 <form method="post" action=""> {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="create">
+    <input type="submit" value='{% if buttontitle %}{{ buttontitle }}{% endif %}'>
 </form>
