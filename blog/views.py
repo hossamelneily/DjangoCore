@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponse,Http404
 from .models import PostModel
 from django.shortcuts import get_object_or_404
-from .forms import PostalForm
+from .forms import PostalForm,Postaltest
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
@@ -257,3 +257,48 @@ class BlogDeleteView(DeleteView):
 
     def get_object(self,queryset=None):
        return PostModel.objects.get(id=self.kwargs.get('id'))
+
+
+
+## test Forms with Django
+
+
+# def testform(request):
+#     form = Postaltest(request.POST or None)
+#     if form.is_valid():
+#         form.save()
+#     # if request.method =='POST':
+#     #     form = Postaltest(request.POST)
+#     #
+#     # if request.method == 'GET':
+#     #     form = Postaltest(age=500)
+#     # if form.is_valid():
+#     #     print(form.cleaned_data)
+#     # print(request.GET.get("username"))
+#     print(request.POST)
+#     context={
+#         'form':form
+#     }
+#     return render(request,'test_form.html',context)
+
+
+
+def testform(request):
+    form=PostalForm(request.POST or None)
+    if form.is_valid():
+        obj=form.save(commit=False)
+        obj.view_count =999
+        obj.save()
+
+
+    if form.has_error:
+        print(form.errors.as_json())
+
+    data = form.errors.items()
+    for key,value in data:
+        print(key,value.as_text())
+
+    context = {
+            'form':form
+        }
+    return render(request,'test_form.html',context)

@@ -6,11 +6,17 @@ from django.utils.encoding import smart_text
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.timesince import timesince
-
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
 
+
+def validate_Email(value):
+    if "@gmail" not in value:
+        raise ValidationError("the Email doesn't has gmail domain!!")
+    else:
+        return value
 
 
 PUBLISH_CHOICES = [
@@ -31,7 +37,7 @@ class PostModelManager(models.Manager):
     def get_queryset(self):
         return PostModelQuerySet(self.model, using=self._db)
 
-    def all(self, *args, **kwargs):
+    def all(self):
         #qs = super(PostModelManager, self).all(*args, **kwargs).active() #.filter(active=True)
         #print(qs)
         qs = self.get_queryset().active()
@@ -43,6 +49,7 @@ class PostModelManager(models.Manager):
         qs_time_1 = qs.filter(publish_date__gte=date1)
         qs_time_2 = qs_time_1.filter(publish_date__lt=date2) # Q Lookups
         #final_qs = (qs_time_1 | qs_time_2).distinct()
+        print(qs)
         return qs_time_2
 
 class PostModel(models.Model):
@@ -53,8 +60,10 @@ class PostModel(models.Model):
                             verbose_name='Post title',
                             unique=True,
                             error_messages={
+                                'required': 'Please enter your title',
                                 "unique": "This title is not unique, please try again.",
-                                "blank": "This field is not full, please try again."
+                                # "blank": "This field is not full, please try again.",
+
                             },
                             help_text='Must be a unique title.')
     slug            = models.SlugField(null=True, blank=True)
@@ -62,13 +71,18 @@ class PostModel(models.Model):
     publish         = models.CharField(max_length=120, choices=PUBLISH_CHOICES, default='draft')
     view_count      = models.IntegerField(default=0)
     publish_date    = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
-    author_email    = models.EmailField(max_length=240, null=True, blank=True)
+    author_email    = models.EmailField(max_length=240, validators=[validate_Email],null=True, blank=True)
     updated         = models.DateTimeField(auto_now=True)
     timestamp       = models.DateTimeField(auto_now_add=True)
 
     objects = PostModelManager()
     other = PostModelManager()
     #save = PostModelManager()
+
+    # class Meta:
+    #     verbose_name = 'Post'
+    #     verbose_name_plural = 'Posts'
+
 
     def get_absolue_url(self):
         return reverse('blog:detail',kwargs={'id':self.id})

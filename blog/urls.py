@@ -2,7 +2,9 @@ from django.conf.urls import include,url
 from . import views
 from django.views.generic.base import TemplateView
 
-from .views import home,detail,create,update,delete,UsingTemplateView,BlogListView,BlogCreateView,BlogUpdateView,BlogDeleteView,BlogDetailView
+from .views import home,detail,create,update,delete,UsingTemplateView,\
+   BlogListView,BlogCreateView,BlogUpdateView,BlogDeleteView,BlogDetailView,\
+   testform
 
 app_name="blog"
 urlpatterns = [
@@ -29,4 +31,8 @@ urlpatterns = [
    url(r'^(?P<id>\d+)/edit$', update, name="update"),
    url(r'^(?P<id>\d+)/delete', delete, name="delete"),
    url(r'^(?P<id>\d+)/CBVDelete', BlogDeleteView.as_view(), name="delete2"),
+
+
+
+   url(r'^formtest/$',testform,name="formtest"),
 ]
