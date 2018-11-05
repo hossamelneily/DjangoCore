@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 from .views import home,detail,create,update,delete,UsingTemplateView,\
    BlogListView,BlogCreateView,BlogUpdateView,BlogDeleteView,BlogDetailView,\
    testform
+from accounts.views import login_user,logout_user
 
 app_name="blog"
 urlpatterns = [
@@ -35,4 +36,6 @@ urlpatterns = [
 
 
    url(r'^formtest/$',testform,name="formtest"),
+   url(r'^login/$',login_user,name="login"),
+   url(r'^logout/$',logout_user,name="logout"),
 ]
